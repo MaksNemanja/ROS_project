@@ -1,5 +1,7 @@
 Ceci est un readme qui vous accompagnera lors de l'evaluation de notre rendu:
 
+Pour avoir des détails du projet, vous pouver lire le fichier root.
+
 1) Challenge 1 : 
 	En ce qui concerne le challenge 1, il suffit de lancer le launch file challenge1.launch qui va executer le projet, comme ce n'est pas specifier si on arette le robot a la fin du challenge ou pas, on a decidé d'areter le robot a l'entrée du couloir .
 	
