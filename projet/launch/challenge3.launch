@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+  
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find projet)/worlds/Projet2024.world"/>
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>
+  </include>
+
+
+  <!-- Spwan turtlebot in Gazebo -->
+
+  <param name="robot_description" command="$(find xacro)/xacro $(find projet)/urdf/turtlebot3.urdf.xacro " />
+
+  <node pkg="gazebo_ros" type="spawn_model" name="spawn_urdf" args="-urdf -model turtlebot3_burger -x -1.717 -y -0.04 -z 0.0 -Y -1.189 -param robot_description" />
+
+
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"/>
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+  
+  <node name="doors" pkg="projet" type="challenge35.py"/>
+      <param name = "speed_linear" value= "0.15"/>
+      <param name = "speed_angular" value= "0.4"/>
+      <param name = "angle_detection" value= "90"/>
+      <param name = "distance_limit_bottle" value= "0.3"/>
+      
+  <!--<node name="rviz" pkg="rviz" type="rviz" args="-d $(find projet/rviz/config.rviz"/>-->
+
+</launch>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+  <!-- Run one mybot_teleop node -->
+  <!--node name="turtlesim" pkg="turtlesim" type="turtlesim_node" output="screen" required="true"/-->
+  <node pkg="projet" name="teleop" type="mybot_teleop.py" 
+        output="screen" required="true">
+  </node>	
+  <!--node name="mybot_color" pkg="mybot_color" type="mybot_color.py" output="screen" required="true"/-->
+
+  <param name="cmd" type="string" value="/cmd_vel"/>
+  <param name="angular_scale" type="double" value="1" />
+  <param name="linear_scale" type="double" value="0.4" />
+  
+</launch>

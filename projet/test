@@ -1,0 +1,119 @@
+
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+import rospy
+import sys, termios, tty
+import click
+from geometry_msgs.msg import Twist
+from sensor_msgs.msg import LaserScan
+import numpy as np
+
+
+# Arrow keys codes
+keys = {'\x1b[A':'up', '\x1b[B':'down', '\x1b[C':'right', '\x1b[D':'left', 's':'stop', 'q':'quit','a':'Default','p' : 'print'}
+
+cmdTopic = rospy.get_param("/cmd", default='/cmd_vel')
+i = 0
+lin = 0
+emergency_stop = False
+
+def reset(twist):
+    twist.angular.z = 0 
+    twist.linear.x = 0
+    # pub.publish(twist)
+
+def cropVel(twist):
+    if twist.linear.x > 2 :
+        twist.linear.x = 2 
+    if twist.linear.x  < -2:
+        twist.linear.x = -2
+
+
+def scan_callback(data):
+    ranges = np.array(data.ranges)
+    global emergency_stop
+    if  ranges[0] < 0.15 : 
+        emergency_stop = True
+
+        
+
+if __name__ == '__main__':
+
+    try:
+        while not rospy.is_shutdown():
+            rospy.loginfo("test main")
+            pub=rospy.Publisher(cmdTopic, Twist, queue_size = 10)
+            rospy.init_node("mybot_teleop", anonymous = True)
+            twist = Twist()
+            scan_sub = rospy.Subscriber('/scan', LaserScan, scan_callback)
+            rate=rospy.Rate(10)  #10Hz
+            
+
+
+        
+            rospy.loginfo("\n\n\niter : "+str(i))
+            i+=1
+        
+            # Get parameter values
+            linear_scale = rospy.get_param("/linear_scale", default=1.0)
+            angular_scale = rospy.get_param("/angular_scale", default=1.0)
+
+            
+            # Get character from console
+
+            mykey = click.getchar()
+
+            if mykey in keys.keys():
+                char=keys[mykey]
+
+
+            if char == 'up':    # UP key
+                twist.linear.x += 1 * linear_scale
+                rospy.loginfo(char)
+
+            elif char == 'down':  # DOWN key
+                twist.linear.x -= 1 * linear_scale
+                rospy.loginfo(char)
+
+            if char == 'left':  # RIGHT key
+                twist.angular.z = 1*angular_scale
+                rospy.loginfo(char)
+
+            elif char == 'right': # LEFT
+                twist.angular.z = -1*angular_scale
+                rospy.loginfo(char)
+
+            if char == "quit":  # QUIT
+                rospy.loginfo(char)
+                
+
+            if char =="stop":
+                rospy.loginfo("stooooooooooooooooooooooooooooooop")
+            
+            if char =="print":
+                print(lin)
+
+
+
+            rospy.loginfo(twist.linear.x)
+            rospy.loginfo(emergency_stop)
+
+            
+            # Print parameter values (optional)
+            # rospy.loginfo("Linear scale: {}".format(linear_scale))
+            # rospy.loginfo("Angular scale: {}".format(angular_scale))
+            """if emergency_stop:
+                twist.linear.x = 0
+                twist.angular.z = 0
+                pub.publish(twist)
+                rate.sleep()
+                emergency_stop = rospy.get_param("/emergency_stop",default=False)       
+            """
+            cropVel(twist)
+            pub.publish(twist)
+            rospy.spin()
+
+    except rospy.ROSInterruptException:
+        pass
+
