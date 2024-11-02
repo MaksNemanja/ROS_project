@@ -9,7 +9,6 @@ from geometry_msgs.msg import Twist
 import numpy as np
 from sensor_msgs.msg import Imu
 import tf.transformations as tf
-from colors_detection import *
 from time import time
 
 name = 'Object detection'
