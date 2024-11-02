@@ -10,7 +10,6 @@ import numpy as np
 import math
 from sensor_msgs.msg import Imu
 import tf.transformations as tf
-from colors_detection import *
 from nav_msgs.msg import Odometry
 
 class Doors():
